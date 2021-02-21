@@ -1,0 +1,13 @@
+
+.custom_star{
+    height: 39px;
+    margin: 2px;
+}
+
+.custom_star_box{
+    display: inline-block; 
+}
+
+.star_1:hover{
+    fill: red;
+}
