@@ -1,12 +1,12 @@
 import React from 'react';
-import {encrypt, decrypt} from "../EncryptionLib"
+import { encrypt, decrypt } from "../EncryptionLib"
 
-const styles = { width: 200 };
+const styles = { width: '100%', margin: 2, padding: 5};
 
 const row = (name, hook) => (
     <tr>
         <td>{name}</td>
-        <td><input style={styles} onChange={(e) => hook(e.target.value)} /></td>
+        <td><input style={styles} onChange={(e) => hook(e.target.value)} placeholder={name}/></td>
     </tr>
 )
 
@@ -16,9 +16,9 @@ const ModGen = () => {
     const [supportUrl, setSupportUrl] = React.useState('')
     const [trustpilotId, setTrustpilotId] = React.useState('')
     const [logoSource, setLogoSource] = React.useState('')
-    
+
     const [url, setUrl] = React.useState('')
-    const [decrypted, setDecypted] = React.useState('')
+    const [error, setError] = React.useState('')
 
     const createUrl = () => {
         const baseUrl = "http://localhost:3000/";
@@ -27,21 +27,25 @@ const ModGen = () => {
         const support = "support=" + supportUrl;
         const trustpilot = "tpid=" + trustpilotId;
         const logo = "logo=" + logoSource;
-        return baseUrl + 'da/'+encrypt(name+'&'+website+'&'+support+'&'+trustpilot+'&'+logo)
+        return baseUrl + encrypt(name + '&' + website + '&' + support + '&' + trustpilot + '&' + logo)
     }
-    
-    const handlePress = (_) => {
+
+    const handlePress = (e) => {
+    if(storeName && websiteUrl && supportUrl  && trustpilotId && logoSource) {
+        setError('')
         setUrl(createUrl)
+    }
+    else setError("Ikke alle felter er korrekt udfyldt")
     }
 
 
     return (
-        <div>
+        <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', padding: '10%' }}>
             <table>
                 <thead>
                     <tr>
-                        <th style={styles}>Felt</th>
-                        <th style={styles}>Input</th>
+                        <th>Felt</th>
+                        <th>Input</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -53,10 +57,11 @@ const ModGen = () => {
 
                 </tbody>
             </table>
-            <button onClick={handlePress}>Opret</button>
-            <p style={{fontSize: 10}}>{url}</p>
-        </div>
+            <button style={styles} onClick={handlePress}>Opret</button>
+            {url && <a href={url} target='_blank'><h2>Test din side her</h2></a>}
 
+            {error && <p style={{color: 'red'}}>{error}</p>}
+        </div>
     )
 }
 
